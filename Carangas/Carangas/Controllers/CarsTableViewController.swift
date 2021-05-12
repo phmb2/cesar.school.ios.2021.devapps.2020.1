@@ -13,47 +13,84 @@ class CarsTableViewController: UITableViewController {
     var cars: [Car] = []
     
     
+    var label: UILabel = {
+        let label = UILabel()
+        label.textAlignment = .center
+        label.textColor = UIColor(named: "main")
+        return label
+    }()
+    
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        label.text = NSLocalizedString("Carregando dados...", comment: "")
+        
+        
+        refreshControl = UIRefreshControl()
+        refreshControl?.addTarget(self, action: #selector(loadData), for: .valueChanged)
+        tableView.refreshControl = refreshControl
     }
     
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
-        
+    @objc func loadData() {
         
         REST.loadCars(onComplete: { (cars) in
             
             self.cars = cars
             
-            // precisa recarregar a tableview usando a main UI thread
-            DispatchQueue.main.async {
-                self.tableView.reloadData()
+            if self.cars.count == 0 {
+                
+                DispatchQueue.main.async {
+                    // parar animacao do refresh
+                    self.refreshControl?.endRefreshing()
+                    
+                    // TODO setar o background
+                    self.label.text = "Sem dados"
+                    self.tableView.backgroundView = self.label
+                    
+                    
+                }
+                
+            } else {
+                // precisa recarregar a tableview usando a main UI thread
+                DispatchQueue.main.async {
+                    // parar animacao do refresh
+                    self.refreshControl?.endRefreshing()
+                    
+                    self.tableView.reloadData()
+                }
             }
-
+            
+            
         }) { (error) in
             
             var response: String = ""
             
             switch error {
-            case .invalidJSON:
-                response = "invalidJSON"
-            case .noData:
-                response = "noData"
-            case .noResponse:
-                response = "noResponse"
-            case .url:
-                response = "JSON inválido"
-            case .taskError(let error):
-                response = "\(error.localizedDescription)"
-            case .responseStatusCode(let code):
-                if code != 200 {
-                    response = "Algum problema com o servidor. :( \nError:\(code)"
+                case .invalidJSON:
+                    response = "invalidJSON"
+                case .noData:
+                    response = "noData"
+                case .noResponse:
+                    response = "noResponse"
+                case .url:
+                    response = "JSON inválido"
+                case .taskError(let error):
+                    response = "\(error.localizedDescription)"
+                case .responseStatusCode(let code):
+                    if code != 200 {
+                        response = "Algum problema com o servidor. :( \nError:\(code)"
                 }
             }
             
             print(response)
             
         }
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        
+        loadData()
     }
 
     override func didReceiveMemoryWarning() {
@@ -67,7 +104,19 @@ class CarsTableViewController: UITableViewController {
         return 1
     }
 
-    override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {        
+    override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        
+        if cars.count == 0 {
+            
+            // mostrar mensagem padrao
+//            self.label.text = "Sem dados"
+            self.tableView.backgroundView = self.label
+        } else {
+            self.label.text = ""
+            self.tableView.backgroundView = nil
+        }
+        
+        
         return cars.count
     }
 
@@ -93,7 +142,7 @@ class CarsTableViewController: UITableViewController {
 
     
     // Override to support editing the table view.
-    override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
+    override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
                 
         if editingStyle == .delete {
             

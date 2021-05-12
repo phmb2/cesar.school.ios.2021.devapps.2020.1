@@ -97,12 +97,27 @@ class AddEditViewController: UIViewController {
             if success {
                 self.goBack()
             } else {
-                // TODO mostrar um erro generico
+                // mostrar um erro generico
                 self.showAlert(withTitle: "Adicionar", withMessage: "Não foi possível adicionar o carro.", isTryAgain: true, operation: .add_car)
             }
             
         }
     }
+    
+    
+    fileprivate func updateCar() {
+        // 2 - edit current car
+        REST.update(car: car) { (success) in
+            if success {
+                self.goBack()
+            } else {
+                self.showAlert(withTitle: "Editar", withMessage: "Não foi possível editar o carro.", isTryAgain: true, operation: .edit_car)
+            }
+        }
+    }
+    
+    
+    
     
     @IBAction func addEdit(_ sender: UIButton) {
         
@@ -123,14 +138,7 @@ class AddEditViewController: UIViewController {
         if car._id == nil {
             addCar()
         } else {
-            // 2 - edit current car
-            REST.update(car: car) { (success) in
-                if success {
-                    self.goBack()
-                } else {
-                    // TODO mostrar um erro generico
-                }
-            }
+            updateCar()
         }
         
     }
@@ -150,7 +158,7 @@ class AddEditViewController: UIViewController {
         
         if oper != .get_brands {
             DispatchQueue.main.async {
-                // ?
+                // ? // vamos precisar usar uma animacao
             }
             
         }
@@ -163,13 +171,10 @@ class AddEditViewController: UIViewController {
                 switch oper {
                     case .add_car:
                         self.addCar()
-                    
                     case .edit_car:
-                    // ?
-                        print("TODO")
+                        self.updateCar()
                     case .get_brands:
-                    // ?
-                        print("TODO")
+                        self.loadBrands()
                 }
                 
             })
