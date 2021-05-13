@@ -25,7 +25,6 @@ class CarsTableViewController: UITableViewController {
         
         label.text = NSLocalizedString("Carregando dados...", comment: "")
         
-        
         refreshControl = UIRefreshControl()
         refreshControl?.addTarget(self, action: #selector(loadData), for: .valueChanged)
         tableView.refreshControl = refreshControl
@@ -40,8 +39,7 @@ class CarsTableViewController: UITableViewController {
             if self.cars.count == 0 {
                 
                 DispatchQueue.main.async {
-                    // parar animacao do refresh
-                    self.refreshControl?.endRefreshing()
+                    
                     
                     // TODO setar o background
                     self.label.text = "Sem dados"

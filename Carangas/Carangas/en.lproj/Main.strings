@@ -1,0 +1,45 @@
+
+/* Class = "UILabel"; text = "Valor"; ObjectID = "M2w-Q0-H2V"; */
+"M2w-Q0-H2V.text" = "Valor";
+
+/* Class = "UINavigationItem"; title = "Cadastro"; ObjectID = "QFB-SZ-ubH"; */
+"QFB-SZ-ubH.title" = "Cadastro";
+
+/* Class = "UITextField"; placeholder = "Preço"; ObjectID = "VWl-TV-lTg"; */
+"VWl-TV-lTg.placeholder" = "Price";
+
+/* Class = "UITextField"; placeholder = "Nome"; ObjectID = "ZfM-q6-B0k"; */
+"ZfM-q6-B0k.placeholder" = "Nome";
+
+/* Class = "UINavigationItem"; title = "Caranga"; ObjectID = "aNu-ZF-NS2"; */
+"aNu-ZF-NS2.title" = "Caranga";
+
+/* Class = "UIButton"; normalTitle = "Cadastrar Carro"; ObjectID = "cQc-3c-Ygb"; */
+"cQc-3c-Ygb.normalTitle" = "Cadastrar Carro";
+
+/* Class = "UILabel"; text = "Marca"; ObjectID = "h0W-xz-8b0"; */
+"h0W-xz-8b0.text" = "Marca";
+
+/* Class = "UITextField"; placeholder = "Marca"; ObjectID = "kLO-Ce-4i7"; */
+"kLO-Ce-4i7.placeholder" = "Marca";
+
+/* Class = "UILabel"; text = "Combustível"; ObjectID = "n0h-oW-Exb"; */
+"n0h-oW-Exb.text" = "Combustível";
+
+/* Class = "UILabel"; text = "Detail"; ObjectID = "prJ-Ma-C2i"; */
+"prJ-Ma-C2i.text" = "Detail";
+
+/* Class = "UINavigationItem"; title = "Carangas"; ObjectID = "qEi-1J-Fj0"; */
+"qEi-1J-Fj0.title" = "Carangas";
+
+/* Class = "UILabel"; text = "Title"; ObjectID = "xxC-Hy-oVh"; */
+"xxC-Hy-oVh.text" = "Title";
+
+/* Class = "UISegmentedControl"; yHY-7A-9NC.segmentTitles[0] = "Flex"; ObjectID = "yHY-7A-9NC"; */
+"yHY-7A-9NC.segmentTitles[0]" = "Flex";
+
+/* Class = "UISegmentedControl"; yHY-7A-9NC.segmentTitles[1] = "Álcool"; ObjectID = "yHY-7A-9NC"; */
+"yHY-7A-9NC.segmentTitles[1]" = "Álcool";
+
+/* Class = "UISegmentedControl"; yHY-7A-9NC.segmentTitles[2] = "Gasolina"; ObjectID = "yHY-7A-9NC"; */
+"yHY-7A-9NC.segmentTitles[2]" = "Gasolina";
