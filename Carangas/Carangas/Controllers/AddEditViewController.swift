@@ -65,6 +65,20 @@ class AddEditViewController: UIViewController {
         loadBrands()
     }
     
+    func startLoadingAnimation() {
+        self.btAddEdit.isEnabled = false
+        self.btAddEdit.backgroundColor = .gray
+        self.btAddEdit.alpha = 0.5
+        self.loading.startAnimating()
+    }
+    
+    func stopLoadingAnimation() {
+        self.btAddEdit.isEnabled = true
+        self.btAddEdit.backgroundColor = UIColor(named: "main")
+        self.btAddEdit.alpha = 0
+        self.loading.stopAnimating()
+    }
+    
     func loadBrands() {
         
         REST.loadBrands { (brands) in
@@ -73,7 +87,7 @@ class AddEditViewController: UIViewController {
             // ascending order
             self.brands = brands.sorted(by: {$0.fipe_name < $1.fipe_name})
             
-            DispatchQueue.main.async {
+            DispatchQueue.main.async {                
                 self.pickerView.reloadAllComponents()
             }
         }
@@ -92,6 +106,9 @@ class AddEditViewController: UIViewController {
     
     // MARK: - IBActions
     fileprivate func addCar() {
+        
+        startLoadingAnimation()
+        
         // new car
         REST.save(car: car) { (success) in
             if success {
@@ -106,6 +123,9 @@ class AddEditViewController: UIViewController {
     
     
     fileprivate func updateCar() {
+        
+        startLoadingAnimation()
+        
         // 2 - edit current car
         REST.update(car: car) { (success) in
             if success {
@@ -158,7 +178,7 @@ class AddEditViewController: UIViewController {
         
         if oper != .get_brands {
             DispatchQueue.main.async {
-                // ? // vamos precisar usar uma animacao
+                self.stopLoadingAnimation()
             }
             
         }

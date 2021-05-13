@@ -80,6 +80,11 @@ class CarsTableViewController: UITableViewController {
                 }
             }
             
+            DispatchQueue.main.async {
+                self.label.text = response
+                self.tableView.backgroundView = self.label
+                print(response)
+            }
             print(response)
             
         }
