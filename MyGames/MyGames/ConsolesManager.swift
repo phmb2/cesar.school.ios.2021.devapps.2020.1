@@ -5,8 +5,6 @@
 //  Created by Douglas Frari on 4/29/21.
 //
 
-import Foundation
-
 import CoreData
 
 class ConsolesManager {
@@ -25,7 +23,6 @@ class ConsolesManager {
             print(error.localizedDescription)
         }
     }
- 
  
     func deleteConsole(index: Int, context: NSManagedObjectContext) {
         let console = consoles[index]

@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		E9EB44E826498A6A0015ABBE /* AddEditConsoleViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9EB44E726498A6A0015ABBE /* AddEditConsoleViewController.swift */; };
+		E9EB44EB26498F580015ABBE /* ConsoleTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9EB44EA26498F580015ABBE /* ConsoleTableViewCell.swift */; };
 		EDCC831C26377EF10069A8C6 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDCC831B26377EF10069A8C6 /* AppDelegate.swift */; };
 		EDCC831E26377EF10069A8C6 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDCC831D26377EF10069A8C6 /* SceneDelegate.swift */; };
 		EDCC832326377EF10069A8C6 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = EDCC832126377EF10069A8C6 /* Main.storyboard */; };
@@ -23,6 +25,8 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		E9EB44E726498A6A0015ABBE /* AddEditConsoleViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddEditConsoleViewController.swift; sourceTree = "<group>"; };
+		E9EB44EA26498F580015ABBE /* ConsoleTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConsoleTableViewCell.swift; sourceTree = "<group>"; };
 		EDCC831826377EF10069A8C6 /* MyGames.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MyGames.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		EDCC831B26377EF10069A8C6 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		EDCC831D26377EF10069A8C6 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -51,6 +55,36 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		E9EB44E226497C650015ABBE /* Utils */ = {
+			isa = PBXGroup;
+			children = (
+				EDEAA681263A25A00034E393 /* ViewController+CoreData.swift */,
+				EDEAA6A8263B6D810034E393 /* ConsolesManager.swift */,
+			);
+			name = Utils;
+			sourceTree = "<group>";
+		};
+		E9EB44E326497C8E0015ABBE /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				EDEAA65A2638E6E40034E393 /* GameTableViewCell.swift */,
+				E9EB44EA26498F580015ABBE /* ConsoleTableViewCell.swift */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
+		E9EB44E426497CB10015ABBE /* Controllers */ = {
+			isa = PBXGroup;
+			children = (
+				EDEAA6542638E4A90034E393 /* GamesTableViewController.swift */,
+				EDEAA6562638E56A0034E393 /* ConsolesTableViewController.swift */,
+				EDEAA6522638E4330034E393 /* AddEditViewController.swift */,
+				EDEAA6582638E5890034E393 /* GameViewController.swift */,
+				E9EB44E726498A6A0015ABBE /* AddEditConsoleViewController.swift */,
+			);
+			name = Controllers;
+			sourceTree = "<group>";
+		};
 		EDCC830F26377EF10069A8C6 = {
 			isa = PBXGroup;
 			children = (
@@ -70,6 +104,9 @@
 		EDCC831A26377EF10069A8C6 /* MyGames */ = {
 			isa = PBXGroup;
 			children = (
+				E9EB44E426497CB10015ABBE /* Controllers */,
+				E9EB44E326497C8E0015ABBE /* Views */,
+				E9EB44E226497C650015ABBE /* Utils */,
 				EDCC831B26377EF10069A8C6 /* AppDelegate.swift */,
 				EDCC831D26377EF10069A8C6 /* SceneDelegate.swift */,
 				EDCC832126377EF10069A8C6 /* Main.storyboard */,
@@ -77,13 +114,6 @@
 				EDCC832926377EF50069A8C6 /* LaunchScreen.storyboard */,
 				EDCC832C26377EF50069A8C6 /* Info.plist */,
 				EDCC832426377EF10069A8C6 /* MyGames.xcdatamodeld */,
-				EDEAA6522638E4330034E393 /* AddEditViewController.swift */,
-				EDEAA6542638E4A90034E393 /* GamesTableViewController.swift */,
-				EDEAA6562638E56A0034E393 /* ConsolesTableViewController.swift */,
-				EDEAA6582638E5890034E393 /* GameViewController.swift */,
-				EDEAA65A2638E6E40034E393 /* GameTableViewCell.swift */,
-				EDEAA681263A25A00034E393 /* ViewController+CoreData.swift */,
-				EDEAA6A8263B6D810034E393 /* ConsolesManager.swift */,
 			);
 			path = MyGames;
 			sourceTree = "<group>";
@@ -163,11 +193,13 @@
 				EDCC831C26377EF10069A8C6 /* AppDelegate.swift in Sources */,
 				EDCC831E26377EF10069A8C6 /* SceneDelegate.swift in Sources */,
 				EDEAA6572638E56A0034E393 /* ConsolesTableViewController.swift in Sources */,
+				E9EB44E826498A6A0015ABBE /* AddEditConsoleViewController.swift in Sources */,
 				EDEAA682263A25A00034E393 /* ViewController+CoreData.swift in Sources */,
 				EDEAA6552638E4A90034E393 /* GamesTableViewController.swift in Sources */,
 				EDEAA6A9263B6D820034E393 /* ConsolesManager.swift in Sources */,
 				EDCC832626377EF10069A8C6 /* MyGames.xcdatamodeld in Sources */,
 				EDEAA65B2638E6E40034E393 /* GameTableViewCell.swift in Sources */,
+				E9EB44EB26498F580015ABBE /* ConsoleTableViewCell.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
