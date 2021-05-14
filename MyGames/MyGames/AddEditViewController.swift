@@ -10,6 +10,7 @@ import Photos
 
 class AddEditViewController: UIViewController {
 
+    // MARK: - Properties
     var game: Game!
     
     @IBOutlet weak var tfTitle: UITextField!
@@ -22,7 +23,6 @@ class AddEditViewController: UIViewController {
     // tip. Lazy somente constroi a classe quando for usar
     lazy var pickerView: UIPickerView = {
         let pickerView = UIPickerView()
-        
         pickerView.delegate = self
         pickerView.dataSource = self
         pickerView.backgroundColor = .white
@@ -31,13 +31,11 @@ class AddEditViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-
         ConsolesManager.shared.loadConsoles(with: context)
     }
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        
         prepareDataLayout()
     }
     
@@ -48,10 +46,15 @@ class AddEditViewController: UIViewController {
             tfTitle.text = game.title
             
             // tip. alem do console pegamos o indice atual para setar o picker view
-            if let console = game.console, let index = ConsolesManager.shared.consoles.firstIndex(of: console) {
-                tfConsole.text = console.name
-                pickerView.selectRow(index, inComponent: 0, animated: false)
+            if ConsolesManager.shared.consoles.count != 0 {
+                if let console = game.console, let index = ConsolesManager.shared.consoles.firstIndex(of: console) {
+                    tfConsole.text = console.name
+                    pickerView.selectRow(index, inComponent: 0, animated: false)
+                }
+            } else {
+                showAlert(message: "Por favor, cadastre uma plataforma antes de inserir um novo jogo.")
             }
+            
             ivCover.image = game.cover as? UIImage
             if let releaseDate = game.releaseDate {
                 dpReleaseDate.date = releaseDate
@@ -73,6 +76,7 @@ class AddEditViewController: UIViewController {
         tfConsole.inputAccessoryView = toolbar
     }
     
+    // MARK: - Selectors
     @objc func cancel() {
         tfConsole.resignFirstResponder()
     }
@@ -86,30 +90,14 @@ class AddEditViewController: UIViewController {
                 cancel()
             }
         } else {
-            // TODO mostrar error aqui
-            print("TODO mostrar error aqui")
+            showAlert(message: "Por favor, cadastre uma plataforma antes de inserir um novo jogo.")
         }
         
     }
     
-
-    /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destination.
-        // Pass the selected object to the new view controller.
-    }
-    */
-    
+    // MARK: - Helpers
     @IBAction func AddEditCover(_ sender: UIButton) {
         // para adicionar uma imagem da biblioteca
-        
-        // para adicionar uma imagem da biblioteca
-        print("para adicionar uma imagem da biblioteca")
-        
-        
         let alert = UIAlertController(title: "Selecinar capa", message: "De onde você quer escolher a capa?", preferredStyle: .actionSheet)
         
         let libraryAction = UIAlertAction(title: "Biblioteca de fotos", style: .default, handler: {(action: UIAlertAction) in
@@ -126,11 +114,9 @@ class AddEditViewController: UIViewController {
         alert.addAction(cancelAction)
         
         present(alert, animated: true, completion: nil)
-        
     }
     
     private func chooseImageFromLibrary(sourceType: UIImagePickerController.SourceType) {
-        
         DispatchQueue.main.async {
             let imagePicker = UIImagePickerController()
             imagePicker.sourceType = sourceType
@@ -140,34 +126,25 @@ class AddEditViewController: UIViewController {
             
             self.present(imagePicker, animated: true, completion: nil)
         }
-        
     }
     
     func selectPicture(sourceType: UIImagePickerController.SourceType) {
-        
         //Photos
         let photos = PHPhotoLibrary.authorizationStatus()
         if photos == .notDetermined {
             PHPhotoLibrary.requestAuthorization({status in
                 if status == .authorized{
-                    
                     self.chooseImageFromLibrary(sourceType: sourceType)
-                    
                 } else {
-                    
-                    print("unauthorized -- TODO message")
+                    self.showAlert(message: "Sem autorização para acessar as fotos do seu dispositivo.")
                 }
             })
         } else if photos == .authorized {
             self.chooseImageFromLibrary(sourceType: sourceType)
         } else if photos == .denied {
-            print("unauthorized -- TODO message")
-            
-            
-            // mostrar ym dialogo para convencer o usuario para dar permissao manualmente
+            self.showAlert(message: "Acesso negado as fotos do seu dispositivo.")
         }
     }
-    
     
     @IBAction func addEditGame(_ sender: UIButton) {
         // acao salvar novo ou editar existente
@@ -191,11 +168,21 @@ class AddEditViewController: UIViewController {
         }
         // Back na navigation
         navigationController?.popViewController(animated: true)
-        
     }
+    
+    func showAlert(message: String) {
+        let alert = UIAlertController(title: nil, message: message, preferredStyle: .alert)
+        
+        alert.addAction(UIAlertAction(title: "OK", style: .default, handler: { _ in
+            self.dismiss(animated: true) {
+                print("Alert dismiss")
+            }
+        }))
+        present(alert, animated: true, completion: nil)
+    }
+}
 
-} // fim da classe
-
+// MARK: - UIPickerViewDelegate, UIPickerViewDataSource
 extension AddEditViewController: UIPickerViewDataSource, UIPickerViewDelegate {
     
     // UIPickerViewDataSource (similar a lógica da tableview)
@@ -213,14 +200,11 @@ extension AddEditViewController: UIPickerViewDataSource, UIPickerViewDelegate {
         let console = ConsolesManager.shared.consoles[row]
         return console.name
     }
-} // fim da classe
+}
 
-
+// MARK: - UIImagePickerControllerDelegate, UINavigationControllerDelegate
 extension AddEditViewController: UIImagePickerControllerDelegate, UINavigationControllerDelegate {
-    
     // tip. implementando os 2 protocols o evento sera notificando apos user selecionar a imagem
-    
-    
     func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
         
     }
@@ -238,9 +222,7 @@ extension AddEditViewController: UIImagePickerControllerDelegate, UINavigationCo
                 self.btCover.setNeedsDisplay()
             }
         }
-        
         dismiss(animated: true, completion: nil)
-        
     }
     
 }

@@ -16,7 +16,7 @@ class GamesTableViewController: UITableViewController {
     // tip. podemos passar qual view vai gerenciar a busca. Neste caso a própria viewController (logo usei nil)
     let searchController = UISearchController(searchResultsController: nil)
     
-    lazy var label: UILabel = {
+    lazy var gameLabel: UILabel = {
         
         let label = UILabel()
         // mensagem default
@@ -82,22 +82,18 @@ class GamesTableViewController: UITableViewController {
 
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         let count = fetchedResultController?.fetchedObjects?.count ?? 0
-        tableView.backgroundView = count == 0 ? label : nil
+        tableView.backgroundView = count == 0 ? gameLabel : nil
         return count
     }
 
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath) as! GameTableViewCell
-        
         guard let game = fetchedResultController.fetchedObjects?[indexPath.row] else {
           return cell
         }
                              
         cell.prepare(with: game)
-        
-        print("cellForRowAt ")
-        
         return cell
     }
     

@@ -13,10 +13,12 @@ class GameViewController: UIViewController {
     @IBOutlet weak var lbConsole: UILabel!
     @IBOutlet weak var lbReleaseDate: UILabel!
     @IBOutlet weak var ivCover: UIImageView!
+    @IBOutlet weak var ivConsole: UIImageView!
     
+    // MARK: - Properties
     var game: Game?
     
-    
+    // MARK: - Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
     }
@@ -38,9 +40,13 @@ class GameViewController: UIViewController {
         } else {
             ivCover.image = UIImage(named: "noCoverFull")
         }
+        
+        if let consoleImage = game?.console?.thumbnail as? UIImage {
+            ivConsole.image = consoleImage
+        } else {
+            ivConsole.image = UIImage(named: "noCoverFull")
+        }
     }
-    
-
     
     // MARK: - Navigation
 
@@ -49,6 +55,4 @@ class GameViewController: UIViewController {
         let vc = segue.destination as! AddEditViewController
         vc.game = game
     }
-    
-
 }
