@@ -11,6 +11,7 @@ import WebKit
 
 class CarViewController: UIViewController {
 
+    // MARK: - Properties
     var car: Car!
     
     // MARK: - IBOutlets
@@ -24,8 +25,6 @@ class CarViewController: UIViewController {
     // MARK: - Super Methods
     override func viewDidLoad() {
         super.viewDidLoad()
-        
-        
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -38,12 +37,10 @@ class CarViewController: UIViewController {
                 
         // Configurando um requisição simples e exibindo na WebKit
         let name = (car.name + "+" + car.brand).replacingOccurrences(of: " ", with: "+")
-
         let urlString = "https://www.google.com.br/search?q=\(name)&tbm=isch"
         
         // fixando o bug quando tem valor conter acentos or caracteres especiais
         let urlFixed = urlString.addingPercentEncoding(withAllowedCharacters:NSCharacterSet.urlQueryAllowed)!
-                
         let url = URL(string: urlFixed)!
         let request = URLRequest(url: url)
         
@@ -55,24 +52,20 @@ class CarViewController: UIViewController {
         webView.load(request)
     }
     
-    
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         let vc = segue.destination as? AddEditViewController
         vc?.car = car
     }
+}
 
-} // fim da classe
-
-
+// MARK: - WKNavigationDelegate, WKUIDelegate
 extension CarViewController: WKNavigationDelegate, WKUIDelegate {
     
     func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
-        print("stopLoading")
         aivLoading.stopAnimating()
     }
     
     func webView(_ webView: WKWebView, didFail navigation: WKNavigation!, withError error: Error) {
         aivLoading.stopAnimating()
     }
-    
 }

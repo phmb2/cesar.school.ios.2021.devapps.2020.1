@@ -16,9 +16,8 @@ enum CarOperationAction {
 
 class AddEditViewController: UIViewController {
 
+    // MARK: - Properties
     var car: Car!
-    
-    // estrutura para guardar as marcas da tabela FIPE
     var brands: [Brand] = []
     
     lazy var pickerView: UIPickerView = {
@@ -26,9 +25,8 @@ class AddEditViewController: UIViewController {
         picker.backgroundColor = .white
         picker.delegate = self
         picker.dataSource = self
-        
         return picker
-    } ()
+    }()
     
     // MARK: - IBOutlets
     @IBOutlet weak var tfBrand: UITextField!
@@ -41,17 +39,21 @@ class AddEditViewController: UIViewController {
     // MARK: - Super Methods
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+        configureLayout()
+        loadBrands()
+    }
+    
+    // MARK: - Helpers
+    func configureLayout() {
         if car != nil {
             tfName?.text = car.name
             tfBrand?.text = car.brand
             tfPrice.text = "\(car.price)"
             scGasType.selectedSegmentIndex = car.gasType
-            btAddEdit.setTitle("Alterar", for: .normal)
+            btAddEdit.setTitle("Alterar carro", for: .normal)
         }
         
-        
-        // 1 criamos uma toolbar e adicionamos como input do textview
+        // criamos uma toolbar e adicionamos como input do textview
         let toolbar = UIToolbar(frame: CGRect(x: 0, y: 0, width: view.frame.width, height: 44))
         toolbar.tintColor = UIColor(named: "main")
         let btCancel = UIBarButtonItem(barButtonSystemItem: .cancel, target: self, action: #selector(cancel))
@@ -61,8 +63,6 @@ class AddEditViewController: UIViewController {
         
         tfBrand.inputAccessoryView = toolbar
         tfBrand.inputView = pickerView
- 
-        loadBrands()
     }
     
     func startLoadingAnimation() {
@@ -83,18 +83,18 @@ class AddEditViewController: UIViewController {
         
         REST.loadBrands { (brands) in
             guard let brands = brands else {return}
-            
             // ascending order
             self.brands = brands.sorted(by: {$0.fipe_name < $1.fipe_name})
-            
-            DispatchQueue.main.async {                
+            DispatchQueue.main.async {
                 self.pickerView.reloadAllComponents()
             }
+        } onError: { (error) in
+            let response = Helper.checkError(error: error)
+            Helper.showAlert(title: "Carangas", message: "Erro ao carregar as marcas de veículos da Tabela FIPE: \(response)", over: self)
         }
     }
     
-    
-    // Precisamos adicionar dois selectors para serem usados pela toolbar :
+    // MARK: - Selectors
     @objc func cancel() {
         tfBrand.resignFirstResponder()
     }
@@ -106,38 +106,45 @@ class AddEditViewController: UIViewController {
     
     // MARK: - IBActions
     fileprivate func addCar() {
-        
         startLoadingAnimation()
-        
-        // new car
-        REST.save(car: car) { (success) in
+        REST.save(car: car) { success in
             if success {
                 self.goBack()
             } else {
                 // mostrar um erro generico
                 self.showAlert(withTitle: "Adicionar", withMessage: "Não foi possível adicionar o carro.", isTryAgain: true, operation: .add_car)
             }
+        } onError: { error in
+            print("Error save: \(error)")
             
+            DispatchQueue.main.async {
+                self.stopLoadingAnimation()
+            }
+            
+            let response = Helper.checkError(error: error)
+            Helper.showAlert(title: "Carangas", message: "Erro ao adicionar carro: \(response)", over: self)
         }
     }
     
-    
     fileprivate func updateCar() {
-        
         startLoadingAnimation()
-        
-        // 2 - edit current car
-        REST.update(car: car) { (success) in
+        REST.update(car: car) { success in
             if success {
                 self.goBack()
             } else {
                 self.showAlert(withTitle: "Editar", withMessage: "Não foi possível editar o carro.", isTryAgain: true, operation: .edit_car)
             }
+        } onError: { error in
+            print("Error update: \(error)")
+            
+            DispatchQueue.main.async {
+                self.stopLoadingAnimation()
+            }
+            
+            let response = Helper.checkError(error: error)
+            Helper.showAlert(title: "Carangas", message: "Erro ao editar carro: \(response)", over: self)
         }
     }
-    
-    
-    
     
     @IBAction func addEdit(_ sender: UIButton) {
         
@@ -154,25 +161,20 @@ class AddEditViewController: UIViewController {
         car.price = Double(tfPrice.text!)!
         car.gasType = scGasType.selectedSegmentIndex
             
-        // 1 diferenciar se estamos salvando (SAVE) ou editando (UPDATE)
+        // diferenciar se estamos salvando (SAVE) ou editando (UPDATE)
         if car._id == nil {
             addCar()
         } else {
             updateCar()
         }
-        
     }
     
-    
-    // 2 - essa função pode fazer um Back na navegação da Navigation Control
+    // essa função pode fazer um Back na navegação da Navigation Control
     func goBack() {
-        
         DispatchQueue.main.async {
             self.navigationController?.popViewController(animated: true)
         }
-        
     }
-    
     
     func showAlert(withTitle titleMessage: String, withMessage message: String, isTryAgain hasRetry: Bool, operation oper: CarOperationAction) {
         
@@ -180,7 +182,6 @@ class AddEditViewController: UIViewController {
             DispatchQueue.main.async {
                 self.stopLoadingAnimation()
             }
-            
         }
         
         let alert = UIAlertController(title: titleMessage, message: message, preferredStyle: .actionSheet)
@@ -210,23 +211,19 @@ class AddEditViewController: UIViewController {
             self.present(alert, animated: true, completion: nil)
         }
     }
+}
 
-} // fim da classe
-
-
+// MARK: - UIPickerViewDelegate, UIPickerViewDataSource
 extension AddEditViewController:UIPickerViewDelegate, UIPickerViewDataSource {
     
     // MARK: - UIPickerViewDelegate
-    
     func pickerView(_ pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String? {
         
         let brand = brands[row]
         return brand.fipe_name
     }
     
-    
     // MARK: - UIPickerViewDataSource
-    
     func numberOfComponents(in pickerView: UIPickerView) -> Int {
         return 1
     }

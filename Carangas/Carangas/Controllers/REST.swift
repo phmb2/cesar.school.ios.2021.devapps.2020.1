@@ -7,7 +7,7 @@
 //
 
 import Foundation
-
+import Alamofire
 
 enum CarError {
     case url
@@ -24,6 +24,8 @@ enum RESTOperation {
     case delete
 }
 
+typealias networkComplete = (Bool) -> Void
+typealias networkError = (CarError) -> Void
 
 class REST {
     
@@ -45,164 +47,128 @@ class REST {
         return config
     }()
     
-    
-    
-    class func delete(car: Car, onComplete: @escaping (Bool) -> Void ) {
-        applyOperation(car: car, operation: .delete, onComplete: onComplete)
+    class func delete(car: Car, onComplete: @escaping networkComplete, onError: @escaping networkError) {
+        applyOperation(car: car, operation: .delete, onComplete: onComplete, onError: onError)
     }
     
-    class func update(car: Car, onComplete: @escaping (Bool) -> Void ) {
-        applyOperation(car: car, operation: .update, onComplete: onComplete)
+    class func update(car: Car, onComplete: @escaping networkComplete, onError: @escaping networkError) {
+        applyOperation(car: car, operation: .update, onComplete: onComplete, onError: onError)
     }
     
-    class func save(car: Car, onComplete: @escaping (Bool) -> Void ) {
-        applyOperation(car: car, operation: .save, onComplete: onComplete)
+    class func save(car: Car, onComplete: @escaping networkComplete, onError: @escaping networkError) {
+        applyOperation(car: car, operation: .save, onComplete: onComplete, onError: onError)
     }
     
-    // o metodo pode retornar um array de nil se tiver algum erro
-    class func loadBrands(onComplete: @escaping ([Brand]?) -> Void) {
-        
+    class func loadBrands(onComplete: @escaping ([Brand]?) -> Void, onError: @escaping networkError) {
         guard let url = URL(string: urlFipe) else {
-            onComplete(nil)
+            onError(.url)
             return
         }
-        // tarefa criada, mas nao processada
-        session.dataTask(with: url) { (data: Data?, response: URLResponse?, error: Error?) in
-            if error == nil {
-                guard let response = response as? HTTPURLResponse else {
-                    onComplete(nil)
-                    return
-                }
-                if response.statusCode == 200 {
-                    // obter o valor de data
-                    guard let data = data else {
-                        onComplete(nil)
+        
+        AF.request(url).responseJSON { (response) in
+            if response.error == nil {
+                switch response.result {
+                case .success:
+                    guard let data = response.data else {
+                        onError(.noData)
                         return
                     }
                     do {
                         let brands = try JSONDecoder().decode([Brand].self, from: data)
                         onComplete(brands)
                     } catch {
-                        // algum erro ocorreu com os dados
-                        onComplete(nil)
+                        print(error.localizedDescription)
+                        onError(.invalidJSON)
                     }
-                } else {
-                    onComplete(nil)
+                case .failure:
+                    print("Status inválido(\(response.response!.statusCode)) pelo servidor!!")
+                    onError(.responseStatusCode(code: response.response!.statusCode))
                 }
             } else {
-                onComplete(nil)
+                print(response.error.debugDescription)
+                onError(.taskError(error: response.error!))
             }
-        }.resume()
-        
-    } // fim do loadBrands
+        }
+    }
     
-    
-    class func loadCars(onComplete: @escaping ([Car]) -> Void, onError: @escaping (CarError) -> Void) {
-        
+    class func loadCars(onComplete: @escaping ([Car]) -> Void, onError: @escaping networkError) {
+
         guard let url = URL(string: REST.basePath) else {
             onError(.url)
             return
         }
-        
-        REST.session.dataTask(with: url) { (data: Data?, response: URLResponse?, error: Error?) in
-            
-            // 1
-            if error == nil {
-                
-                // algo válido foi retornado do servidor...
-                
-                // 2
-                guard let response = response as? HTTPURLResponse else {
-                    onError(.noResponse)
-                    return
-                }
-                
-                if response.statusCode == 200 {
-                    
-                    // servidor respondeu com sucesso :)
-                    
-                    // 3
-                    // obter o valor de data
-                    guard let data = data else {
-                        // ERROR porque o data é invalido
+
+        AF.request(url).responseJSON { (response) in
+            if response.error == nil {
+                switch response.result {
+                case .success:
+                    guard let data = response.data else {
                         onError(.noData)
                         return
                     }
-                    
                     do {
                         let cars = try JSONDecoder().decode([Car].self, from: data)
-                        // pronto para reter dados
-                        
-                        onComplete(cars) // SUCESSO
-                        
+                        onComplete(cars)
                     } catch {
-                        // algum erro ocorreu com os dados
                         print(error.localizedDescription)
                         onError(.invalidJSON)
                     }
-                    
-                } else {
-                    print("Algum status inválido(-> \(response.statusCode) <-) pelo servidor!! ")
-                    onError(.responseStatusCode(code: response.statusCode))
+                case .failure:
+                    print("Status inválido(\(response.response!.statusCode)) pelo servidor!!")
+                    onError(.responseStatusCode(code: response.response!.statusCode))
                 }
-                
             } else {
-                print(error.debugDescription)
-                onError(.taskError(error: error!))
+                print(response.error.debugDescription)
+                onError(.taskError(error: response.error!))
             }
-            
-        }.resume()
-        
+        }
     }
     
-    
-    
-    private class func applyOperation(car: Car, operation: RESTOperation , onComplete: @escaping (Bool) -> Void ) {
+    private class func applyOperation(car: Car, operation: RESTOperation, onComplete: @escaping networkComplete, onError: @escaping networkError) {
         
         // o endpoint do servidor para update é: URL/id
-        let urlString = basePath + "/" + (car._id ?? "")
+        let urlString = REST.basePath + "/" + (car._id ?? "")
         
         guard let url = URL(string: urlString) else {
-            onComplete(false)
+            onError(.url)
             return
         }
-        var request = URLRequest(url: url)
-        var httpMethod: String = ""
+        
+        var httpMethod: HTTPMethod = .get
         
         switch operation {
         case .delete:
-            httpMethod = "DELETE"
+            httpMethod = .delete
         case .save:
-            httpMethod = "POST"
+            httpMethod = .post
         case .update:
-            httpMethod = "PUT"
+            httpMethod = .put
         }
-        request.httpMethod = httpMethod
         
         // transformar objeto para um JSON, processo contrario do decoder -> Encoder
-        guard let json = try? JSONEncoder().encode(car) else {
-            onComplete(false)
+        guard (try? JSONEncoder().encode(car)) != nil else {
+            onError(.invalidJSON)
             return
         }
-        request.httpBody = json
         
-        session.dataTask(with: request) { (data: Data?, response: URLResponse?, error: Error?) in
-            if error == nil {
-                // verificar e desembrulhar em uma unica vez
-                guard let response = response as? HTTPURLResponse, response.statusCode == 200, let _ = data else {
-                    onComplete(false)
-                    return
-                }
-                
-                // ok
-                onComplete(true)
-                
-            } else {
-                onComplete(false)
-            }
+        AF.request(url, method: httpMethod, parameters: car, encoder: JSONParameterEncoder.default).response { (response) in
             
-        }.resume()
-        
+            if response.error == nil {
+                switch response.result {
+                case .success(_):
+                    if response.response?.statusCode == 200 {
+                        onComplete(true)
+                    } else {
+                        onError(.noData)
+                    }
+                case .failure(_):
+                    print("Status inválido(\(response.response!.statusCode)) pelo servidor!!")
+                    onError(.responseStatusCode(code: response.response!.statusCode))
+                }
+            } else {
+                print(response.error.debugDescription)
+                onError(.taskError(error: response.error!))
+            }
+        }
     }
-    
 }
