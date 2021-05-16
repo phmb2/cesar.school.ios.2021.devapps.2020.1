@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import SideMenu
 
 class CarsTableViewController: UITableViewController {
 
@@ -27,6 +28,12 @@ class CarsTableViewController: UITableViewController {
         refreshControl = UIRefreshControl()
         refreshControl?.addTarget(self, action: #selector(loadData), for: .valueChanged)
         tableView.refreshControl = refreshControl
+        
+        // Define the menus
+        SideMenuManager.default.leftMenuNavigationController = storyboard!.instantiateViewController(withIdentifier: "LeftMenuNavigationController") as? SideMenuNavigationController
+        SideMenuManager.default.addPanGestureToPresent(toView: self.navigationController!.navigationBar)
+        // Updated
+        SideMenuManager.default.addScreenEdgePanGesturesToPresent(toView: self.navigationController!.view, forMenu: SideMenuManager.PresentDirection.left)
     }
     
     override func viewWillAppear(_ animated: Bool) {

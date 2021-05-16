@@ -16,6 +16,8 @@
 		A1B18D1B1F9C1DCF00313110 /* CarViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1B18D1A1F9C1DCF00313110 /* CarViewController.swift */; };
 		BAB45EAA58D311223281E08C /* Pods_Carangas.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E5B71A992EB0C25B290E2134 /* Pods_Carangas.framework */; };
 		E9EB454D264FEE7A0015ABBE /* Helper.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9EB454C264FEE7A0015ABBE /* Helper.swift */; };
+		E9EB455126519D640015ABBE /* MenuTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9EB455026519D630015ABBE /* MenuTableViewController.swift */; };
+		E9EB455426519FF90015ABBE /* AboutViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9EB455326519FF90015ABBE /* AboutViewController.swift */; };
 		ED3C35A42649FC7000343B92 /* Car.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED3C35A32649FC7000343B92 /* Car.swift */; };
 		ED3C35A72649FF3500343B92 /* REST.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED3C35A62649FF3500343B92 /* REST.swift */; };
 		EDC85A31264C9D7300E156FD /* WebKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EDC85A30264C9D7300E156FD /* WebKit.framework */; };
@@ -34,6 +36,8 @@
 		A1B18D1A1F9C1DCF00313110 /* CarViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CarViewController.swift; sourceTree = "<group>"; };
 		E5B71A992EB0C25B290E2134 /* Pods_Carangas.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Carangas.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		E9EB454C264FEE7A0015ABBE /* Helper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Helper.swift; sourceTree = "<group>"; };
+		E9EB455026519D630015ABBE /* MenuTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuTableViewController.swift; sourceTree = "<group>"; };
+		E9EB455326519FF90015ABBE /* AboutViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AboutViewController.swift; sourceTree = "<group>"; };
 		ED3C35A32649FC7000343B92 /* Car.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Car.swift; sourceTree = "<group>"; };
 		ED3C35A62649FF3500343B92 /* REST.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = REST.swift; sourceTree = "<group>"; };
 		EDC85A2B264C929D00E156FD /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Main.strings; sourceTree = "<group>"; };
@@ -113,6 +117,8 @@
 				A1B18D181F9C1DBA00313110 /* AddEditViewController.swift */,
 				A1B18D1A1F9C1DCF00313110 /* CarViewController.swift */,
 				ED3C35A62649FF3500343B92 /* REST.swift */,
+				E9EB455026519D630015ABBE /* MenuTableViewController.swift */,
+				E9EB455326519FF90015ABBE /* AboutViewController.swift */,
 			);
 			path = Controllers;
 			sourceTree = "<group>";
@@ -275,7 +281,9 @@
 				A1B18D171F9C1D7E00313110 /* CarsTableViewController.swift in Sources */,
 				ED3C35A72649FF3500343B92 /* REST.swift in Sources */,
 				A1B18D051F9C1BDD00313110 /* AppDelegate.swift in Sources */,
+				E9EB455426519FF90015ABBE /* AboutViewController.swift in Sources */,
 				ED3C35A42649FC7000343B92 /* Car.swift in Sources */,
+				E9EB455126519D640015ABBE /* MenuTableViewController.swift in Sources */,
 				E9EB454D264FEE7A0015ABBE /* Helper.swift in Sources */,
 				A1B18D191F9C1DBA00313110 /* AddEditViewController.swift in Sources */,
 				A1B18D1B1F9C1DCF00313110 /* CarViewController.swift in Sources */,

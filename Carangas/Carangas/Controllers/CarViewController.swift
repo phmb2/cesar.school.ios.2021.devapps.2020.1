@@ -18,7 +18,6 @@ class CarViewController: UIViewController {
     @IBOutlet weak var lbBrand: UILabel!
     @IBOutlet weak var lbGasType: UILabel!
     @IBOutlet weak var lbPrice: UILabel!
-    
     @IBOutlet weak var webView: WKWebView!
     @IBOutlet weak var aivLoading: UIActivityIndicatorView!
 
